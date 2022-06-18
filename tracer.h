@@ -54,8 +54,16 @@ typedef struct s_seine
 	int				cont;
 }	t_seine;
 
-#define RESOLUTION 600
+# define RESOLUTION 600
+# define KEY_RELEASE 3
+# define DESTROY_NOTIFY 17
+# define EXPOSE 2
+# define ESC 65307
+# define BUTTON_RELEASE (1L << 1)
+# define EXPOSURE_MASK (1L << 15)
+# define NO_EVENT 0L
 
+t_seine	*init_seine(void);
 double	**create_matrix(int col, int line);
 double	**matrix_inverter(double **a, double abs);
 double	**matrix_multpli(double **a, double **b, int line);

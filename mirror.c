@@ -297,6 +297,17 @@ t_seine	*init_seine(void)
 	return (seine);
 }
 
+int	exit_simple(int keycode, t_img_data *data)
+{
+	(void)data;
+	if (keycode == ESC)
+	{
+		exit(0);
+	}
+	return (0);
+}
+
+
 int	main(void)
 {
 	void		*mlx;
@@ -312,6 +323,8 @@ int	main(void)
 								&img.endian);
 	render(seine, &img, RESOLUTION);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
+	mlx_hook(mlx_win, KEY_RELEASE, BUTTON_RELEASE, exit_simple, &img);
+	mlx_hook(mlx_win, DESTROY_NOTIFY, NO_EVENT, exit_simple, &img);
 	mlx_loop(mlx);
 	return (0);
 }
