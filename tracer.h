@@ -1,12 +1,13 @@
 #ifndef TRACER_H
 #define TRACER_H
+
 #include <unistd.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <mlx.h>
 
-typedef struct material
+typedef struct s_material
 {
 	double	*color;
 	double	ambient;
@@ -14,26 +15,26 @@ typedef struct material
 	double	specular;
 }	t_material;
 
-typedef struct Light
+typedef struct s_light
 {
 	double	*intensity;
 	double	*posi;
 }	t_light;
 
-typedef struct Intersections
+typedef struct s_intersec
 {
 	int		cont;
 	double	t1;
 	double	t2;
 }	t_intersec;
 
-typedef struct Ray
+typedef struct s_ray
 {
 	double	*origin;
 	double	*direction;
 }	t_ray;
 
-typedef struct Hiter
+typedef struct s_hit
 {
 	double			t;
 }	t_hit;

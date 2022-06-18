@@ -307,7 +307,6 @@ int	exit_simple(int keycode, t_img_data *data)
 	return (0);
 }
 
-
 int	main(void)
 {
 	void		*mlx;
