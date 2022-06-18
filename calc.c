@@ -30,7 +30,7 @@ double	**matrix_inverter(double **a, double abs)
 			signal = -1.0;
 		for (size_t u = 0; u < 4; u++)
 		{
-			if (t % 2 == 0 && u % 2 == 1 || t % 2 == 1 && u % 2 == 0)
+			if ((t % 2 == 0 && u % 2 == 1) || (t % 2 == 1 && u % 2 == 0))
 				signal = -1.0;
 			iboo = 0;
 			for (size_t i = 0; i < 3; i++)
