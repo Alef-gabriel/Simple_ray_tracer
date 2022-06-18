@@ -27,7 +27,7 @@ double	**matrix_identify(double x, double y, double z, double w)
 	return (res);
 }
 
-t_ray	*RayToObjectSpace(t_ray *ray, double **local)
+t_ray	*ray_to_object_space(t_ray *ray, double **local)
 {
 	t_ray	*res;
 	double	**inverse;
@@ -72,7 +72,7 @@ t_intersec	*plane_intersection(t_ray *ray)
 t_intersec	*sphere_intersection(t_ray *rayy, t_obj *obj)
 {
 	t_intersec	*intersectionPoints = NULL;
-	t_ray *ray = RayToObjectSpace(rayy, obj->matrix);
+	t_ray *ray = ray_to_object_space(rayy, obj->matrix);
 	//position
 	double *oc = vector_subtraction(ray->origin, obj->position);
 	double	a = vector_abs(ray->direction, ray->direction);
@@ -197,7 +197,7 @@ double	*slighting(double *position, t_light *light, double *eye, t_material *mat
 	return vector_addition(vector_addition(ambienteColor, difusecolor), specularcolor);
 }
 
-t_hit	*hiter_seine_object(t_ray *ray, t_seine *seine)
+t_hit	*hiter_seine_object(t_ray *ray, t_seine *scene)
 {
 	t_intersec	*intersection;
 	t_hit		*hiter;
@@ -205,23 +205,23 @@ t_hit	*hiter_seine_object(t_ray *ray, t_seine *seine)
 
 	i = 0;
 	hiter = NULL;
-	while (i < seine->cont)
+	while (i < scene->cont)
 	{
-		if (seine->object[i]->type == 'C')
+		if (scene->object[i]->type == 'C')
 		{
-			intersection = cylinder_intersection(ray, seine->object[i]);
+			intersection = cylinder_intersection(ray, scene->object[i]);
 			hiter = hiter_point(intersection);
 			if (hiter)
 				return(hiter);
 		}
-		if(seine->object[i]->type == 'S')
+		if(scene->object[i]->type == 'S')
 		{
-			intersection = sphere_intersection(ray, seine->object[i]);
+			intersection = sphere_intersection(ray, scene->object[i]);
 			hiter = hiter_point(intersection);
 			if (hiter)
 				return(hiter);
 		}
-		if(seine->object[i]->type == 'P')
+		if(scene->object[i]->type == 'P')
 		{
 			intersection = plane_intersection(ray);
 			hiter = hiter_point(intersection);
@@ -233,7 +233,7 @@ t_hit	*hiter_seine_object(t_ray *ray, t_seine *seine)
 	return (hiter);
 }
 
-void	render(t_seine *seine, t_img_data *img, int resolution)
+void	render(t_seine *scene, t_img_data *img, int resolution)
 {
 	double	*camera = make_point(0, 0, -5);
 	double	*wall = make_point(0,0,7.0);
@@ -246,16 +246,16 @@ void	render(t_seine *seine, t_img_data *img, int resolution)
 		while (y < resolution)
 		{
 			double	increment = wallsize / resolution;
-			double	*current_wall_pixel = vector_subtraction(wall, creat_vector((wallsize * 0.5) - (x * increment), (wallsize * 0.5) - (y * increment), wall[2]));
+			double	*current_wall_pixel = vector_subtraction(wall, create_vector((wallsize * 0.5) - (x * increment), (wallsize * 0.5) - (y * increment), wall[2]));
 			double	*point = vector_subtraction(current_wall_pixel, camera);
 			double	*direction = vector_normalize(point);
 			ray->direction = direction;
 			ray->origin = camera;
-			t_hit	*hit = hiter_seine_object(ray, seine);
+			t_hit	*hit = hiter_seine_object(ray, scene);
 			if(hit != NULL)
 			{
 				double	*hitposition = position(ray, hit->t);
-				double	*lighting = slighting(hitposition, seine->light[0], ray->direction, seine->object[0]->material, vector_normalize(hitposition));
+				double	*lighting = slighting(hitposition, scene->light[0], ray->direction, scene->object[0]->material, vector_normalize(hitposition));
 				int color = ((int)(255.99 * lighting[0])<<16) + ((int)(255.99 * lighting[1])<<8) + ((int)(255.99 * lighting[2]));
 				my_mlx_pixel_put(img, x, y, color);
 			}
@@ -267,24 +267,24 @@ void	render(t_seine *seine, t_img_data *img, int resolution)
 
 t_seine	*init_seine(void)
 {
-	t_seine	*seine = (t_seine *)malloc(sizeof(t_seine));
-	seine->cont = 1;
-	seine->object = (t_obj **)malloc(sizeof(t_obj *) * 2);
-	seine->object[0] = (t_obj*)malloc(sizeof(t_obj));
-	seine->object[0]->radius = 2.0;
-	seine->object[0]->type = 'C';
-	seine->object[0]->position = make_point(0.0, 0.0, 0.0);
-	seine->object[0]->matrix = matrix_identify(1,1,1,1);
-	seine->object[0]->material = (t_material *)malloc(sizeof(t_material));
-	seine->object[0]->material->color = creat_vector(1, 0.2, 1.0);
-	seine->object[0]->material->ambient = 0.1;
-	seine->object[0]->material->diffuse = 0.9;
-	seine->object[0]->material->specular = 0.9;
-	seine->object[1] = (t_obj*)malloc(sizeof(t_obj));
-	seine->object[1]->type = 'P';
-	seine->light = (t_light **)malloc(sizeof(t_light *));
-	seine->light[0] = (t_light *)malloc(sizeof(t_light));
-	seine->light[0]->posi = make_point(-10, 10, -10);
-	seine->light[0]->intensity = creat_vector(1.0, 1.0, 1.0);
-	return (seine);
+	t_seine	*scene = (t_seine *)malloc(sizeof(t_seine));
+	scene->cont = 1;
+	scene->object = (t_obj **)malloc(sizeof(t_obj *) * 2);
+	scene->object[0] = (t_obj*)malloc(sizeof(t_obj));
+	scene->object[0]->radius = 2.0;
+	scene->object[0]->type = 'C';
+	scene->object[0]->position = make_point(0.0, 0.0, 0.0);
+	scene->object[0]->matrix = matrix_identify(1,1,1,1);
+	scene->object[0]->material = (t_material *)malloc(sizeof(t_material));
+	scene->object[0]->material->color = create_vector(1, 0.2, 1.0);
+	scene->object[0]->material->ambient = 0.1;
+	scene->object[0]->material->diffuse = 0.9;
+	scene->object[0]->material->specular = 0.9;
+	scene->object[1] = (t_obj*)malloc(sizeof(t_obj));
+	scene->object[1]->type = 'P';
+	scene->light = (t_light **)malloc(sizeof(t_light *));
+	scene->light[0] = (t_light *)malloc(sizeof(t_light));
+	scene->light[0]->posi = make_point(-10, 10, -10);
+	scene->light[0]->intensity = create_vector(1.0, 1.0, 1.0);
+	return (scene);
 }

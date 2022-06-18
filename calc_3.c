@@ -43,7 +43,7 @@ double	*vector_normalize(double *a)
 	return (res);
 }
 
-double	*creat_vector(double x, double y, double z)
+double	*create_vector(double x, double y, double z)
 {
 	double	*res;
 

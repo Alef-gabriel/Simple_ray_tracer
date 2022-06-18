@@ -86,7 +86,7 @@ double	**rotation_y(double r);
 double	vector_abs(double *a, double *b);
 double	*vector_cross(double *a, double *b);
 double	*vector_normalize(double *a);
-double	*creat_vector(double x, double y, double z);
+double	*create_vector(double x, double y, double z);
 double	*vector_addition(double *a, double *b);
 double	*vector_multipli(double *a, double *b);
 double	*vector_subtraction(double *a, double *b);
@@ -94,5 +94,5 @@ double	*vector_multipli_scalar(double scalar, double *a);
 double	vector_length(double *a);
 double	*make_point(double x, double y, double z);
 double	*reflect(double *v, double *n);
-void	render(t_seine *seine, t_img_data *img, int resolution);
+void	render(t_seine *scene, t_img_data *img, int resolution);
 #endif
