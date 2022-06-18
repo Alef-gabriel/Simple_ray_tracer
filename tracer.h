@@ -54,6 +54,8 @@ typedef struct s_seine
 	int				cont;
 }	t_seine;
 
+#define RESOLUTION 600
+
 double	**create_matrix(int col, int line);
 double	**matrix_inverter(double **a, double abs);
 double	**matrix_multpli(double **a, double **b, int line);
