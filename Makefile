@@ -9,6 +9,7 @@ SRC		= calc_2.c \
 	calc_3.c \
 	calc.c \
 	mirror.c \
+	simple.c \
 
 
 %.o: %.c

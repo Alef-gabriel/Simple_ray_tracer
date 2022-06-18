@@ -1,4 +1,4 @@
-#ifndef TRACER_H
+# ifndef TRACER_H
 #define TRACER_H
 
 #include <unistd.h>
@@ -55,6 +55,16 @@ typedef struct s_seine
 	int				cont;
 }	t_seine;
 
+typedef struct	s_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}				t_img_data;
+
+
+
 # define RESOLUTION 600
 # define KEY_RELEASE 3
 # define DESTROY_NOTIFY 17
@@ -67,9 +77,9 @@ typedef struct s_seine
 t_seine	*init_seine(void);
 double	**create_matrix(int col, int line);
 double	**matrix_inverter(double **a, double abs);
-double	**matrix_multpli(double **a, double **b, int line);
+double	**matrix_multiply(double **a, double **b, int line);
 double	**matrix_transpose(double **a);
-double	matrix_x_multpli(double a[2][2]);
+double	matrix_x_multiply(double a[2][2]);
 double	matrix_cofactor(double a[3][3]);
 double	matrix_determinant(double **a);
 double	**rotation_y(double r);
@@ -79,9 +89,10 @@ double	*vector_normalize(double *a);
 double	*creat_vector(double x, double y, double z);
 double	*vector_addition(double *a, double *b);
 double	*vector_multipli(double *a, double *b);
-double	*vector_subtration(double *a, double *b);
+double	*vector_subtraction(double *a, double *b);
 double	*vector_multipli_scalar(double scalar, double *a);
-double	vector_lenght(double *a);
+double	vector_length(double *a);
 double	*make_point(double x, double y, double z);
 double	*reflect(double *v, double *n);
+void	render(t_seine *seine, t_img_data *img, int resolution);
 #endif

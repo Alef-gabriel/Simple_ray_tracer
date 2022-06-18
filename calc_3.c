@@ -33,13 +33,13 @@ double	*vector_cross(double *a, double *b)
 double	*vector_normalize(double *a)
 {
 	double	*res;
-	double	lenght;
+	double	length;
 
-	lenght = vector_lenght(a);
+	length = vector_length(a);
 	res = (double *)malloc(sizeof(double));
-	res[0] = a[0] / lenght;
-	res[1] = a[1] / lenght;
-	res[2] = a[2] / lenght;
+	res[0] = a[0] / length;
+	res[1] = a[1] / length;
+	res[2] = a[2] / length;
 	return (res);
 }
 

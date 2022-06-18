@@ -58,7 +58,7 @@ double	*reflect(double *v, double *n)
 	double	*res;
 
 	var = vector_multipli_scalar(2.0*vector_abs(v,n),n);
-	res = vector_subtration(v, var);
+	res = vector_subtraction(v, var);
 	free(var);
 	return(res);
 }

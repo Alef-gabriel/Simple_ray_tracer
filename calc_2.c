@@ -1,12 +1,12 @@
 #include "tracer.h"
 
-double	**matrix_multpli(double **a, double **b, int line)
+double	**matrix_multiply(double **a, double **b, int line)
 {
 	double	**res;
 	double	*var;
 
 	res = (double **)malloc(sizeof(double *) * line);
-	for (size_t i = 0; i < line; i++)
+	for (int i = 0; i < line; i++)
 	{
 		var = (double *)malloc(sizeof(double) * 4);
 		for (size_t u = 0; u < 4; u++)
@@ -43,7 +43,7 @@ double	**matrix_transpose(double **a)
 	return (a);
 }
 
-double	matrix_x_multpli(double a[2][2])
+double	matrix_x_multiply(double a[2][2])
 {
 	return (a[0][0] * a[1][1] - (a[0][1] * a[1][0]));
 }
@@ -57,22 +57,22 @@ double	matrix_cofactor(double a[3][3])
 	int		size = 2;
 
 	res = 0.0;
-	for (size_t u = 0; u < 3; u++)
+	for (int u = 0; u < 3; u++)
 	{
 		signal = 1.0;
 		if (u % 2 == 1)
 			signal = -1.0;
-		for (size_t i = 0; i < 2; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			jboo = 0;
-			for (size_t j = 0; j < size; j++)
+			for (int j = 0; j < size; j++)
 			{
 				if (j == u)
 					jboo = 1;
 				matrix[i][j] = a[i + 1][j + jboo];
 			}
 		}
-		res += (signal * a[0][u]) * matrix_x_multpli(matrix);
+		res += (signal * a[0][u]) * matrix_x_multiply(matrix);
 	}
 	return (res);
 }
@@ -86,15 +86,15 @@ double	matrix_determinant(double **a)
 	double	matrix[3][3];
 
 	res = 0.0;
-	for (size_t u = 0; u < 4; u++)
+	for (int u = 0; u < 4; u++)
 	{
 		signal = 1.0;
 		if (u % 2 == 1)
 			signal = -1.0;
-		for (size_t i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			jboo = 0;
-			for (size_t j = 0; j < size; j++)
+			for (int j = 0; j < size; j++)
 			{
 				if (j == u)
 					jboo = 1;
@@ -128,7 +128,7 @@ double	*vector_multipli(double *a, double *b)
 	return (res);
 }
 
-double	*vector_subtration(double *a, double *b)
+double	*vector_subtraction(double *a, double *b)
 {
 	double *res;
 
@@ -150,7 +150,7 @@ double	*vector_multipli_scalar(double scalar, double *a)
 	return (res);
 }
 
-double	vector_lenght(double *a)
+double	vector_length(double *a)
 {
 	return (sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]));
 }

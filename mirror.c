@@ -1,13 +1,5 @@
 #include "tracer.h"
 
-typedef struct	s_data {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}				t_img_data;
-
 void	my_mlx_pixel_put(t_img_data *data, int x, int y, int color)
 {
 	char	*dst;
@@ -46,10 +38,10 @@ t_ray	*RayToObjectSpace(t_ray *ray, double **local)
 
 	inverse = matrix_inverter(local, matrix_determinant(local));
 	aux[0] = ray->direction;
-	aux = matrix_multpli(aux, inverse, 1);
+	aux = matrix_multiply(aux, inverse, 1);
 	res->direction = aux[0];
 	aux[0] = ray->origin;
-	aux = matrix_multpli(aux, inverse, 1);
+	aux = matrix_multiply(aux, inverse, 1);
 	res->origin = aux[0];
 	return (res);
 }
@@ -82,7 +74,7 @@ t_intersec	*sphere_intersection(t_ray *rayy, t_obj *obj)
 	t_intersec	*intersectionPoints = NULL;
 	t_ray *ray = RayToObjectSpace(rayy, obj->matrix);
 	//position
-	double *oc = vector_subtration(ray->origin, obj->position);
+	double *oc = vector_subtraction(ray->origin, obj->position);
 	double	a = vector_abs(ray->direction, ray->direction);
 	double	b = 2.0 * vector_abs(oc, ray->direction);
 	double	c = vector_abs(oc, oc) - (obj->radius * obj->radius);
@@ -106,7 +98,7 @@ t_intersec	*cylinder_intersection(t_ray *ray, t_obj *obj)
 {
 	t_intersec	*intersectionPoints = NULL;
 
-	double *oc = vector_subtration(ray->origin, obj->position);
+	double *oc = vector_subtraction(ray->origin, obj->position);
 	double	a = ray->direction[0] * ray->direction[0] + ray->direction[2] * ray->direction[2];
 	double	b = 2.0 * oc[0] * ray->direction[0] + 2.0 * oc[2] * ray->direction[2];
 
@@ -177,7 +169,7 @@ double	*slighting(double *position, t_light *light, double *eye, t_material *mat
 {
 	double	*temp = material->color;
 	double	*effectivecolor = vector_multipli(temp, light->intensity);
-	double	*lightvec = vector_normalize(vector_subtration(light->posi, position));
+	double	*lightvec = vector_normalize(vector_subtraction(light->posi, position));
 	double	*ambienteColor = vector_multipli_scalar(material->ambient, temp);
 	double	*difusecolor;
 	double	*specularcolor;
@@ -254,8 +246,8 @@ void	render(t_seine *seine, t_img_data *img, int resolution)
 		while (y < resolution)
 		{
 			double	increment = wallsize / resolution;
-			double	*current_wall_pixel = vector_subtration(wall, creat_vector((wallsize * 0.5) - (x * increment), (wallsize * 0.5) - (y * increment), wall[2]));
-			double	*point = vector_subtration(current_wall_pixel, camera);
+			double	*current_wall_pixel = vector_subtraction(wall, creat_vector((wallsize * 0.5) - (x * increment), (wallsize * 0.5) - (y * increment), wall[2]));
+			double	*point = vector_subtraction(current_wall_pixel, camera);
 			double	*direction = vector_normalize(point);
 			ray->direction = direction;
 			ray->origin = camera;
@@ -295,35 +287,4 @@ t_seine	*init_seine(void)
 	seine->light[0]->posi = make_point(-10, 10, -10);
 	seine->light[0]->intensity = creat_vector(1.0, 1.0, 1.0);
 	return (seine);
-}
-
-int	exit_simple(int keycode, t_img_data *data)
-{
-	(void)data;
-	if (keycode == ESC)
-	{
-		exit(0);
-	}
-	return (0);
-}
-
-int	main(void)
-{
-	void		*mlx;
-	void		*mlx_win;
-	t_img_data	img;
-	t_seine		*seine;
-
-	mlx = mlx_init();
-	seine = init_seine();
-	mlx_win = mlx_new_window(mlx, RESOLUTION, RESOLUTION, "Ray_Sphere");
-	img.img = mlx_new_image(mlx, RESOLUTION, RESOLUTION);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-								&img.endian);
-	render(seine, &img, RESOLUTION);
-	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-	mlx_hook(mlx_win, KEY_RELEASE, BUTTON_RELEASE, exit_simple, &img);
-	mlx_hook(mlx_win, DESTROY_NOTIFY, NO_EVENT, exit_simple, &img);
-	mlx_loop(mlx);
-	return (0);
 }
