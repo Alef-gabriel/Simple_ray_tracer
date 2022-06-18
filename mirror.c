@@ -6,9 +6,9 @@ typedef struct	s_data {
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
-}				t_data;
+}				t_img_data;
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_img_data *data, int x, int y, int color)
 {
 	char	*dst;
 
@@ -241,7 +241,7 @@ t_hit	*hiter_seine_object(t_ray *ray, t_seine *seine)
 	return (hiter);
 }
 
-void	render(t_seine *seine, t_data *img, int resolution)
+void	render(t_seine *seine, t_img_data *img, int resolution)
 {
 	double	*camera = make_point(0, 0, -5);
 	double	*wall = make_point(0,0,7.0);
@@ -273,14 +273,8 @@ void	render(t_seine *seine, t_data *img, int resolution)
 	}
 }
 
-int	main(void)
+t_seine	*init_seine(void)
 {
-	void	*mlx;
-	void	*mlx_win;
-	t_data	img;
-
-	mlx = mlx_init();
-	int	resolution = 600;
 	t_seine	*seine = (t_seine *)malloc(sizeof(t_seine));
 	seine->cont = 1;
 	seine->object = (t_obj **)malloc(sizeof(t_obj *) * 2);
@@ -294,20 +288,29 @@ int	main(void)
 	seine->object[0]->material->ambient = 0.1;
 	seine->object[0]->material->diffuse = 0.9;
 	seine->object[0]->material->specular = 0.9;
-
 	seine->object[1] = (t_obj*)malloc(sizeof(t_obj));
 	seine->object[1]->type = 'P';
-
 	seine->light = (t_light **)malloc(sizeof(t_light *));
 	seine->light[0] = (t_light *)malloc(sizeof(t_light));
 	seine->light[0]->posi = make_point(-10, 10, -10);
 	seine->light[0]->intensity = creat_vector(1.0, 1.0, 1.0);
+	return (seine);
+}
 
-	mlx_win = mlx_new_window(mlx, resolution, resolution, "Ray_Sphere");
-	img.img = mlx_new_image(mlx, resolution, resolution);
+int	main(void)
+{
+	void		*mlx;
+	void		*mlx_win;
+	t_img_data	img;
+	t_seine		*seine;
+
+	mlx = mlx_init();
+	seine = init_seine();
+	mlx_win = mlx_new_window(mlx, RESOLUTION, RESOLUTION, "Ray_Sphere");
+	img.img = mlx_new_image(mlx, RESOLUTION, RESOLUTION);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
 								&img.endian);
-	render(seine, &img, resolution);
+	render(seine, &img, RESOLUTION);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	mlx_loop(mlx);
 	return (0);
